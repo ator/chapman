@@ -1,5 +1,9 @@
 #pragma once
+
+#include <boost/optional.hpp>
+
 #include "ray.h"
+#include "intersection.h"
 
 class intersectable
 {
@@ -11,5 +15,5 @@ public:
 	auto operator=(intersectable&& other)->intersectable& = delete;
 	virtual ~intersectable() = default;
 
-	virtual auto intersects(const ray& ray) const -> bool = 0;
+	virtual auto intersects(const ray& ray) const -> boost::optional<intersection> = 0;
 };

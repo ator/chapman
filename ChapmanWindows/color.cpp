@@ -1,28 +1,33 @@
+#include <cmath>
+
 #include "color.h"
 
-const color color::white(255, 255, 255);
+const color color::white(1.0, 1.0, 1.0);
 const color color::black(0, 0, 0);
+const color color::red(1.0, 0, 0);
+const color color::green(0, 1.0, 0);
+const color color::blue(0, 0, 1.0);
 
-color::color(unsigned rgb) :
-	_red((rgb & 0xFF0000) >> 16),
-	_green((rgb & 0x00FF00) >> 8),
-	_blue(rgb & 0x0000FF)
-{}
-
-color::color(const unsigned char red, const unsigned char green, const unsigned char blue) :
+color::color(const double red, const double green, const double blue) :
 	_red(red),
 	_green(green),
 	_blue(blue)
 {}
 
-auto color::data() const -> const char*
+auto color::operator*(const double factor) const -> color
 {
-	return reinterpret_cast<const char*>(_rgb);
+	const auto red = _red * factor;
+	const auto green = _green * factor;
+	const auto blue = _blue * factor;
+	return {red, green, blue};
 }
 
-auto color::rgb() const -> unsigned
+auto color::rgb() const -> unsigned int
 {
-	return (_red << 8 | _green) << 8 | _blue;
+	const auto red = static_cast<unsigned int>(255 * std::fmin(_red,1.0));
+	const auto green = static_cast<unsigned int>(255 * ::fmin(_green, 1.0));
+	const auto blue = static_cast<unsigned int>(255 * ::fmin(_blue, 1.0));
+	return (blue << 8 | green) << 8 | red;
 }
 
 auto color::size() -> std::streamsize

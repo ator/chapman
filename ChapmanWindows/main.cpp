@@ -8,10 +8,12 @@ int main()
 		std::cout << "Chapman v1.0" << std::endl;
 
 		std::cout << "Loading scene..." << std::endl;
-		scene scene;
-		scene.add_sphere({ 0, 0, 2 }, 1);
-		scene.add_sphere({ 1, -1, 2.5 }, 0.75);
-		scene.add_sphere({ -1, -1, 2.5 }, 0.75);
+		scene scene(35);
+		scene.add_sphere({ 0, 0, -4 }, 2, color::red);
+		scene.add_sphere({ 1, -1, -4 }, 2, color::green);
+		scene.add_sphere({ -1, -1, -4 }, 2, color::blue);
+		scene.add_sphere({ 1, 1, -4 }, 2, color(1.0, 0.0, 1.0));
+		scene.add_sphere({ -1, 1, -4 }, 2, color(1.0, 1.0, 0.0));
 
 		std::cout << "Rendering..." << std::endl;
 		image image(512, 512);

@@ -48,11 +48,11 @@ auto image::write_to_disk(const std::string& filename) const -> void
 		file << "P6\n " << _width << "\n " << _height << "\n " << max_color_value << "\n";
 		for (auto& row : _pixels)
 		{
-			file.write(reinterpret_cast<const char*>(row.data()), row.size() * color::size());
-			//for (auto& pixel : row)
-			//{
-			//	file.write(pixel.data(), color::size());
-			//}
+			for (auto& pixel : row)
+			{
+				auto rgb = pixel.rgb();
+				file.write(reinterpret_cast<const char*>(&rgb), color::size());
+			}
 		}
 
 		file.close();

@@ -1,27 +1,22 @@
 #pragma once
-#include <iostream>
 
 #include "point.h"
 #include "ray.h"
+#include "color.h"
 #include "intersectable.h"
 
 class sphere : public intersectable
 {
 public:
-	sphere(point center, double radius);
+	sphere(point center, double radius, color color);
 
-	auto intersects(const ray& ray) const -> bool override;
+	auto color() const->color;
 
-	friend auto operator<<(std::ostream& os, const sphere& s)->std::ostream&;
+	auto intersects(const ray& ray) const -> boost::optional<intersection> override;
 
 private:
 	point _center;
 	double _radius;
 	double _radius_squared;
+	::color _color;
 };
-
-inline std::ostream& operator<<(std::ostream& os, const sphere& s)
-{
-	os << s._center << "->" << s._radius;
-	return os;
-}

@@ -6,24 +6,20 @@ class color
 public:
 	static const color white;
 	static const color black;
+	static const color red;
+	static const color green;
+	static const color blue;
 
 	color() = default;
-	explicit color(unsigned int rgb);
-	color(unsigned char red, unsigned char green, unsigned char blue);
-	
-	auto data() const -> const char*;
+	color(double red, double green, double blue);
+
+	auto operator*(double factor) const->color;
+
 	auto rgb() const -> unsigned int;
-	static auto size() -> std::streamsize;
+	static auto size()->std::streamsize;
 
 private:
-	union
-	{
-		unsigned char _rgb[3];
-		struct
-		{
-			unsigned char _red;
-			unsigned char _green;
-			unsigned char _blue;
-		};
-	};
+	double _red;
+	double _green;
+	double _blue;
 };
