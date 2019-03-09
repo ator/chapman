@@ -169,6 +169,7 @@
     <ClInclude Include="intersectable.h" />
     <ClInclude Include="intersection.h" />
     <ClInclude Include="light.h" />
+    <ClInclude Include="plane.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="scene.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="intersection.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="plane.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="scene.cpp" />

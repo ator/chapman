@@ -2,6 +2,7 @@
 
 #include "scene.h"
 #include "sphere.h"
+#include "plane.h"
 
 scene::scene(const double field_of_view_degrees) :
 	_field_of_view_adjustment(std::tan(field_of_view_degrees * 180 / boost::math::constants::pi<double>()))
@@ -10,6 +11,11 @@ scene::scene(const double field_of_view_degrees) :
 auto scene::add_sphere(point center, double radius, ::color color) -> void
 {
 	add_object(std::make_shared<::sphere>(center, radius, color));
+}
+
+auto scene::add_plane(point center, vector3 normal, color color) -> void
+{
+	add_object(std::make_shared<plane>(center, normal, color));
 }
 
 auto scene::add_light(point center, double radius, color color) -> void

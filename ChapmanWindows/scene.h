@@ -14,6 +14,7 @@ public:
 	~scene() = default;
 
 	auto add_sphere(point center, double radius, color color) -> void;
+	auto add_plane(point center, vector3 normal, color color) -> void;
 	auto add_light(point center, double radius, color color) -> void;
 
 	auto render(image& image) const -> void;

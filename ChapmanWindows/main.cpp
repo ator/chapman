@@ -14,6 +14,7 @@ int main()
 		scene.add_sphere({ -1, -1, -4 }, 2, color::blue);
 		scene.add_sphere({ 1, 1, -4 }, 2, color(1.0, 0.0, 1.0));
 		scene.add_sphere({ -1, 1, -4 }, 2, color(1.0, 1.0, 0.0));
+		scene.add_plane({ 0, -3, 0 }, {0, -1, 0}, color(0.0, 1.0, 1.0));
 
 		std::cout << "Rendering..." << std::endl;
 		image image(512, 512);
