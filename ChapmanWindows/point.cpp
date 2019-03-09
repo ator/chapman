@@ -31,7 +31,7 @@ auto point::operator!=(const point& v) const -> bool
 	return !operator==(v);
 }
 
-auto point::operator+(const point& v) const -> point
+auto point::operator+(const point& v) const -> vector3
 {
 	const auto x = _x + v._x;
 	const auto y = _y + v._y;
@@ -39,7 +39,7 @@ auto point::operator+(const point& v) const -> point
 	return { x, y, z };
 }
 
-auto point::operator-(const point& v) const -> point
+auto point::operator-(const point& v) const -> vector3
 {
 	const auto x = _x - v._x;
 	const auto y = _y - v._y;

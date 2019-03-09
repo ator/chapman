@@ -8,11 +8,6 @@ public:
 
 	vector3() = default;
 	vector3(double x, double y, double z);
-	vector3(const vector3& v) = default;
-	vector3(const vector3&& v) noexcept;
-	auto operator=(const vector3& v)->vector3& = default;
-	auto operator=(vector3&& v) noexcept->vector3&;
-	~vector3() = default;
 
 	auto operator==(const vector3& v) const -> bool;
 	auto operator!=(const vector3& v) const -> bool;

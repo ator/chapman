@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "vector3.h"
 
 class point
 {
@@ -17,8 +18,8 @@ public:
 	auto operator==(const point& v) const -> bool;
 	auto operator!=(const point& v) const -> bool;
 
-	auto operator+(const point& v) const->point;
-	auto operator-(const point& v) const->point;
+	auto operator+(const point& v) const->vector3;
+	auto operator-(const point& v) const->vector3;
 
 	auto operator-() const->point;
 

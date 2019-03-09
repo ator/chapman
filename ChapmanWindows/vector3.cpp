@@ -1,25 +1,10 @@
 #include "vector3.h"
 
-vector3::vector3() : _x(0), _y(0), _z(0)
+vector3 vector3::zero(0,0,0);
+
+vector3::vector3(const double x, const double y, const double z) :
+	_x(x), _y(y), _z(z)
 {}
-
-vector3::vector3(double x, double y, double z) : _x(x), _y(y), _z(z)
-{}
-
-vector3::vector3(vector3&& v) noexcept
-{
-	_x = v._x;
-	_y = v._y;
-	_z = v._z;
-}
-
-auto vector3::operator=(vector3&& v) noexcept -> vector3&
-{
-	_x = v._x;
-	_y = v._y;
-	_z = v._z;
-	return *this;
-}
 
 auto vector3::operator==(const vector3& v) const -> bool
 {
@@ -63,4 +48,23 @@ auto vector3::operator*(const vector3& v) const -> double
 auto vector3::operator-() const -> vector3
 {
 	return { -_x, -_y, -_z };
+}
+
+auto vector3::length2() const -> double
+{
+	return _x * _x + _y * _y + _z * _z;
+}
+
+auto vector3::length() const -> double
+{
+	return std::sqrt(length2());
+}
+
+auto vector3::normalize() -> vector3&
+{
+	const auto len = length();
+	_x /= len;
+	_y /= len;
+	_z /= len;
+	return *this;
 }

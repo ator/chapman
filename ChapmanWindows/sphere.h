@@ -3,25 +3,21 @@
 
 #include "point.h"
 #include "ray.h"
+#include "intersectable.h"
 
-class sphere
+class sphere : public intersectable
 {
 public:
-	sphere() = default;
 	sphere(point center, double radius);
-	sphere(sphere& s) = default;
-	sphere(sphere&& s) noexcept;
-	auto operator=(const sphere& s)->sphere& = default;
-	auto operator=(sphere&& s) noexcept->sphere&;
-	~sphere() = default;
 
-	auto intersects(const ray& ray) const -> bool;
+	auto intersects(const ray& ray) const -> bool override;
 
 	friend auto operator<<(std::ostream& os, const sphere& s)->std::ostream&;
 
 private:
-	point _center{};
-	double _radius{};
+	point _center;
+	double _radius;
+	double _radius_squared;
 };
 
 inline std::ostream& operator<<(std::ostream& os, const sphere& s)
