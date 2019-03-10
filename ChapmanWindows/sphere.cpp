@@ -1,18 +1,16 @@
-#include "sphere.h"
+#include <boost/math/constants/constants.hpp>
 
-sphere::sphere(const point center, const double radius, const ::color color) :
+#include "sphere.h"
+#include "intersection.h"
+
+sphere::sphere(const vector3 center, const double radius, const ::color color, const double albedo) :
+	intersectable(color, albedo),
 	_center(center),
 	_radius(radius),
-	_radius_squared(radius * radius),
-	_color(color)
+	_radius_squared(radius * radius)
 {}
 
-auto sphere::color() const -> ::color
-{
-	return _color;
-}
-
-auto sphere::intersects(const ray& ray) const -> boost::optional<intersection>
+auto sphere::intersects(const ray& ray) const -> boost::optional<double>
 {
 	const auto l = _center - ray.origin();
 	const auto adj = l * ray.direction();
@@ -33,5 +31,10 @@ auto sphere::intersects(const ray& ray) const -> boost::optional<intersection>
 	}
 	
 	const auto distance = t0 < t1 ? t0 : t1;
-	return { {distance, _color} };
+	return { distance };
+}
+
+auto sphere::surface_normal(const vector3& hit_point) const -> vector3
+{
+	return (hit_point - _center).normalize();
 }

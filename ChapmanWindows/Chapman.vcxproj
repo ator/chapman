@@ -119,7 +119,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_69_0\lib64-msvc-14.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_69_0\lib64-msvc-14.1;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -160,17 +160,18 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_69_0\lib64-msvc-14.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_69_0\lib64-msvc-14.1;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="color.h" />
+    <ClInclude Include="directional_light.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="intersectable.h" />
     <ClInclude Include="intersection.h" />
     <ClInclude Include="light.h" />
+    <ClInclude Include="point_light.h" />
     <ClInclude Include="plane.h" />
-    <ClInclude Include="point.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="sphere.h" />
@@ -178,12 +179,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="directional_light.cpp" />
     <ClCompile Include="image.cpp" />
+    <ClCompile Include="intersectable.cpp" />
     <ClCompile Include="intersection.cpp" />
-    <ClCompile Include="light.cpp" />
+    <ClCompile Include="point_light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plane.cpp" />
-    <ClCompile Include="point.cpp" />
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="sphere.cpp" />

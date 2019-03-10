@@ -1,10 +1,27 @@
+#include <cmath>
+
 #include "vector3.h"
 
-vector3 vector3::zero(0,0,0);
+vector3 vector3::zero(0, 0, 0);
 
 vector3::vector3(const double x, const double y, const double z) :
 	_x(x), _y(y), _z(z)
 {}
+
+auto vector3::x() const -> double
+{
+	return _x;
+}
+
+auto vector3::y() const -> double
+{
+	return _y;
+}
+
+auto vector3::z() const -> double
+{
+	return _z;
+}
 
 auto vector3::operator==(const vector3& v) const -> bool
 {
@@ -43,6 +60,11 @@ auto vector3::operator^(const vector3& v) const -> vector3
 auto vector3::operator*(const vector3& v) const -> double
 {
 	return _x * v._x + _y * v._y + _z * v._z;
+}
+
+auto vector3::operator*(const double factor) const -> vector3
+{
+	return { _x * factor, _y * factor, _z * factor };
 }
 
 auto vector3::operator-() const -> vector3

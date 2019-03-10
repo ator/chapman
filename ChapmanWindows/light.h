@@ -1,11 +1,5 @@
 #pragma once
 
-#include "point.h"
-#include "color.h"
-#include "sphere.h"
-
-class light : public sphere
+class light
 {
-public:
-	light(point center, double radius, ::color color);
 };

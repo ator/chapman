@@ -1,9 +1,8 @@
 #include "ray.h"
-#include <utility>
 
-ray::ray(point origin, vector3 direction) :
-	_origin(std::move(origin)),
-	_direction(std::move(direction))
+ray::ray(const vector3 origin, const vector3 direction) :
+	_origin(origin),
+	_direction(direction)
 {}
 
 ray::ray(const ray&& r) noexcept
@@ -19,7 +18,7 @@ auto ray::operator=(ray&& r) noexcept -> ray&
 	return *this;
 }
 
-auto ray::origin() const -> const point&
+auto ray::origin() const -> const vector3&
 {
 	return _origin;
 }

@@ -1,8 +1,8 @@
 #include "intersection.h"
 
-intersection::intersection(const double distance, const ::color color) :
+intersection::intersection(const double distance, std::shared_ptr<intersectable> object) :
 	_distance(distance),
-	_color(color)
+	_object(object)
 {}
 
 auto intersection::distance() const -> double
@@ -10,7 +10,7 @@ auto intersection::distance() const -> double
 	return _distance;
 }
 
-auto intersection::color() const -> ::color
+auto intersection::object() const -> std::shared_ptr<intersectable>
 {
-	return _color;
+	return _object;
 }

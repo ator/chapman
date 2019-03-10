@@ -1,5 +1,6 @@
 #pragma once
-#include <iostream>
+
+class point;
 
 class vector3
 {
@@ -9,6 +10,10 @@ public:
 	vector3() = default;
 	vector3(double x, double y, double z);
 
+	auto x() const -> double;
+	auto y() const -> double;
+	auto z() const -> double;
+
 	auto operator==(const vector3& v) const -> bool;
 	auto operator!=(const vector3& v) const -> bool;
 
@@ -16,6 +21,10 @@ public:
 	auto operator-(const vector3& v) const->vector3;
 	auto operator^(const vector3& v) const->vector3;
 	auto operator*(const vector3& v) const -> double;
+	
+	auto operator+(const point& p) const->vector3;
+
+	auto operator*(double factor) const->vector3;
 
 	auto operator-() const->vector3;
 
@@ -24,16 +33,8 @@ public:
 
 	auto normalize()->vector3&;
 
-	friend auto operator<<(std::ostream& os, const vector3& v)->std::ostream&;
-
 private:
 	double _x{};
 	double _y{};
 	double _z{};
 };
-
-inline std::ostream& operator<<(std::ostream& os, const vector3& v)
-{
-	os << "[" << v._x << ", " << v._y << ", " << v._z << "]";
-	return os;
-}

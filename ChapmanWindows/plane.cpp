@@ -1,12 +1,13 @@
 #include "plane.h"
+#include "intersection.h"
 
-plane::plane(const point center, const vector3 normal, const color color) :
+plane::plane(const vector3 center, const vector3 normal, const ::color color, const double albedo) :
+	intersectable(color, albedo),
 	_center(center),
-	_normal(normal),
-	_color(color)
+	_normal(normal)
 {}
 
-auto plane::intersects(const ray& ray) const -> boost::optional<intersection>
+auto plane::intersects(const ray& ray) const -> boost::optional<double>
 {
 	const auto denominator = _normal * ray.direction();
 	if (denominator > 1e-6)
@@ -15,9 +16,14 @@ auto plane::intersects(const ray& ray) const -> boost::optional<intersection>
 		const auto distance = v * _normal / denominator;
 		if (distance >= 0.0)
 		{
-			return { { distance, _color} };
+			return { distance };
 		}
 	}
 
 	return {};
+}
+
+auto plane::surface_normal(const vector3&) const -> vector3
+{
+	return _normal;
 }

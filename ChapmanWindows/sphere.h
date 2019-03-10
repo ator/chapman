@@ -1,6 +1,5 @@
 #pragma once
 
-#include "point.h"
 #include "ray.h"
 #include "color.h"
 #include "intersectable.h"
@@ -8,15 +7,13 @@
 class sphere : public intersectable
 {
 public:
-	sphere(point center, double radius, color color);
+	sphere(vector3 center, double radius, ::color color, double albedo = 1.0);
 
-	auto color() const->color;
-
-	auto intersects(const ray& ray) const -> boost::optional<intersection> override;
+	auto intersects(const ray& ray) const -> boost::optional<double> override;
+	auto surface_normal(const vector3& hit_point) const -> vector3 override;
 
 private:
-	point _center;
+	vector3 _center;
 	double _radius;
 	double _radius_squared;
-	::color _color;
 };

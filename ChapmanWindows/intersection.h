@@ -1,17 +1,16 @@
 #pragma once
 
-#include "color.h"
+#include "intersectable.h"
 
 class intersection
 {
 public:
-	intersection(double distance, ::color color);
-
+	intersection(double distance, std::shared_ptr<intersectable> object);
 	auto distance() const -> double;
-	auto color() const->color;
+	auto object() const->std::shared_ptr<intersectable>;
 
 private:
 	double _distance;
-	::color _color;
+	std::shared_ptr<intersectable> _object;
 };
 
