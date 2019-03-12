@@ -7,14 +7,21 @@
 class point_light final : public light
 {
 public:
-	point_light(vector3 center, double radius, ::color color, double intensity);
+	point_light(vector3 center, double radius, color color, double intensity);
 
 	auto color() const->color;
 	auto intensity() const -> double;
 
 	auto intersects(const ray& ray) const -> boost::optional<double>;
 
+	auto contribution(
+		const scene& scene,
+		const vector3& hit_point,
+		const vector3& surface_normal,
+		const ::color& object_color,
+		double light_reflected)
+		->::color override;
+
 private:
-	sphere _light_bulb;
-	double _intensity;
+	const sphere _light_bulb;
 };

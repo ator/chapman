@@ -9,7 +9,7 @@ class sphere : public intersectable
 public:
 	sphere(vector3 center, double radius, ::color color, double albedo = 1.0);
 
-	auto intersects(const ray& ray) const -> boost::optional<double> override;
+	auto intersection_distance(const ray& ray) const -> boost::optional<double> override;
 	auto surface_normal(const vector3& hit_point) const -> vector3 override;
 
 private:

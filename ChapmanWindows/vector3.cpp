@@ -82,11 +82,11 @@ auto vector3::length() const -> double
 	return std::sqrt(length2());
 }
 
-auto vector3::normalize() -> vector3&
+auto vector3::normalize() const -> vector3
 {
 	const auto len = length();
-	_x /= len;
-	_y /= len;
-	_z /= len;
-	return *this;
+	const auto x = _x / len;
+	const auto y = _y / len;
+	const auto z = _z / len;
+	return {x, y, z};
 }

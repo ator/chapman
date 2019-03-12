@@ -1,20 +1,20 @@
 #include "plane.h"
 #include "intersection.h"
 
-plane::plane(const vector3 center, const vector3 normal, const ::color color, const double albedo) :
+plane::plane(const vector3 origin, const vector3 normal, const ::color color, const double albedo) :
 	intersectable(color, albedo),
-	_center(center),
+	_origin(origin),
 	_normal(normal)
 {}
 
-auto plane::intersects(const ray& ray) const -> boost::optional<double>
+auto plane::intersection_distance(const ray& ray) const -> boost::optional<double>
 {
 	const auto denominator = _normal * ray.direction();
-	if (denominator > 1e-6)
+	if (std::fabs(denominator) > 1E-6)
 	{
-		const auto v = _center - ray.origin();
+		const auto v = _origin - ray.origin();
 		const auto distance = v * _normal / denominator;
-		if (distance >= 0.0)
+		if (distance >= 1E-6)
 		{
 			return { distance };
 		}

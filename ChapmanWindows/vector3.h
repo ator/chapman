@@ -31,7 +31,7 @@ public:
 	auto length2() const -> double;
 	auto length() const -> double;
 
-	auto normalize()->vector3&;
+	auto normalize() const ->vector3;
 
 private:
 	double _x{};

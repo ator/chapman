@@ -23,14 +23,24 @@ int main(const int argc, const char* argv[])
 		notify(vm);
 
 		std::cout << "Loading scene..." << std::endl;
-		scene scene(35);
-		scene.add_sphere({ 0, 0, -4 }, 2, color::red);
-		scene.add_sphere({ 1, -1, -4 }, 2, color::green);
-		scene.add_sphere({ -1, -1, -4 }, 2, color::blue);
-		scene.add_sphere({ 1, 1, -4 }, 2, color(1.0, 0.0, 1.0));
-		scene.add_sphere({ -1, 1, -4 }, 2, color(1.0, 1.0, 0.0));
-		scene.add_plane({ 0, -3, 0 }, {0, -1, 0}, color(0.0, 1.0, 1.0));
-		scene.add_directional_light({ 1, 1, -1 }, color::white, 1.0);
+		scene scene(90);
+		
+		scene.add_sphere({  0,  0, -11 }, 1.5, color::red);
+		
+		scene.add_sphere({ -2, -2, -12 }, 1, color::green);
+		scene.add_sphere({  2, -2, -12 }, 1, color::blue);
+		scene.add_sphere({ -2,  2, -12 }, 1, color::yellow);
+		scene.add_sphere({  2,  2, -12 }, 1, color::magenta);
+
+		scene.add_sphere({ -2, -2, -10 }, 1, color::magenta);
+		scene.add_sphere({  2, -2, -10 }, 1, color::yellow);
+		scene.add_sphere({ -2,  2, -10 }, 1, color::blue);
+		scene.add_sphere({  2,  2, -10 }, 1, color::green);
+
+		scene.add_plane({ 0, -3, 0 }, {0, 1, 0}, color::gray);
+
+		scene.add_directional_light({ 1, -1, -0.5 }, color::white, 2.0);
+		scene.add_directional_light({ -1, -0.5, -1 }, color::white, 1.0);
 
 		std::cout << "Rendering " << width << "x" << height << " pixels..." << std::endl;
 		image image(width, height);

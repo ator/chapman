@@ -20,7 +20,7 @@ public:
 	auto color() const -> ::color;
 	auto light_reflected() const -> double;
 
-	virtual auto intersects(const ray& ray) const -> boost::optional<double> = 0;
+	virtual auto intersection_distance(const ray& ray) const -> boost::optional<double> = 0;
 	virtual auto surface_normal(const vector3& hit_point) const->vector3 = 0;
 
 private:

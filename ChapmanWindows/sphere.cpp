@@ -10,7 +10,7 @@ sphere::sphere(const vector3 center, const double radius, const ::color color, c
 	_radius_squared(radius * radius)
 {}
 
-auto sphere::intersects(const ray& ray) const -> boost::optional<double>
+auto sphere::intersection_distance(const ray& ray) const -> boost::optional<double>
 {
 	const auto l = _center - ray.origin();
 	const auto adj = l * ray.direction();

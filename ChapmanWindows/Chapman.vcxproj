@@ -183,6 +183,7 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="intersectable.cpp" />
     <ClCompile Include="intersection.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="point_light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plane.cpp" />
