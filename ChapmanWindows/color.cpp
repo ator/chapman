@@ -25,12 +25,20 @@ auto color::operator+=(const ::color& other) -> ::color&
 	return *this;
 }
 
+auto color::operator+(const ::color& other) const -> ::color
+{
+	const auto red = _red + other._red;
+	const auto green = _green + other._green;
+	const auto blue = _blue + other._blue;
+	return { red, green, blue };
+}
+
 auto color::operator*(const ::color& other) const -> ::color
 {
 	const auto red = _red * other._red;
 	const auto green = _green * other._green;
 	const auto blue = _blue * other._blue;
-	return color({ red, green, blue }).clamp();
+	return { red, green, blue };
 }
 
 auto color::operator*(const ::color&& other) const -> ::color
@@ -38,7 +46,7 @@ auto color::operator*(const ::color&& other) const -> ::color
 	const auto red = _red * other._red;
 	const auto green = _green * other._green;
 	const auto blue = _blue * other._blue;
-	return color({ red, green, blue }).clamp();
+	return { red, green, blue };
 }
 
 auto color::operator*(const double factor) const -> color
@@ -46,6 +54,32 @@ auto color::operator*(const double factor) const -> color
 	const auto red = _red * factor;
 	const auto green = _green * factor;
 	const auto blue = _blue * factor;
+	return { red, green, blue };
+}
+
+auto color::length2() const -> double
+{
+	return _red * _red + _green * _green + _blue * _blue;
+}
+
+auto color::length() const -> double
+{
+	return std::sqrt(length2());
+}
+
+auto color::scale(const double factor) const -> color
+{
+	const auto red = _red / factor;
+	const auto green = _green / factor;
+	const auto blue = _blue / factor;
+	return { red, green, blue };
+}
+
+auto color::clamp() const -> color
+{
+	const auto red = std::fmax(std::fmin(1.0, _red), 0.0);
+	const auto green = std::fmax(std::fmin(1.0, _green), 0.0);
+	const auto blue = std::fmax(std::fmin(1.0, _blue), 0.0);
 	return { red, green, blue };
 }
 
@@ -60,12 +94,4 @@ auto color::rgb() const -> unsigned int
 auto color::size() -> std::streamsize
 {
 	return 3;
-}
-
-auto color::clamp() const -> color
-{
-	const auto red = std::fmax(std::fmin(1.0, _red), 0.0);
-	const auto green = std::fmax(std::fmin(1.0, _green), 0.0);
-	const auto blue = std::fmax(std::fmin(1.0, _blue), 0.0);
-	return {red, green, blue};
 }

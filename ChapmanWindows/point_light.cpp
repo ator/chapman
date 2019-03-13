@@ -1,33 +1,24 @@
-#include "point_light.h"
-#include "intersection.h"
+#include <boost/math/constants/constants.hpp>
 
-point_light::point_light(const vector3 center, const double radius, const ::color color, const double intensity) :
+#include "point_light.h"
+
+point_light::point_light(const vector3 center, const ::color color, const double intensity) :
 	light(color, intensity),
-	_light_bulb(center, radius, color)
+	_center(center)
 {}
 
-auto point_light::color() const -> ::color
+auto point_light::direction_from(const vector3& hit_point) -> vector3
 {
-	return _light_bulb.color();
+	return (_center - hit_point).normalize();
 }
 
-auto point_light::intensity() const -> double
+auto point_light::distance(const vector3& hit_point) -> double
 {
-	return _intensity;
+	return (_center - hit_point).length();
 }
 
-auto point_light::intersects(const ray& ray) const -> boost::optional<double>
+auto point_light::intensity(const vector3& hit_point) -> double
 {
-	return _light_bulb.intersection_distance(ray);
-}
-
-auto point_light::contribution(
-	const scene& scene,
-	const vector3& hit_point,
-	const vector3& surface_normal,
-	const ::color& object_color,
-	const double light_reflected)
-	-> ::color
-{
-	return color::black;
+	const auto distance_to_light_2 = direction_from(hit_point).length2();
+	return _intensity / (4.0 * boost::math::constants::pi<double>() * distance_to_light_2);
 }

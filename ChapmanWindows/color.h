@@ -17,10 +17,14 @@ public:
 	color(double red, double green, double blue);
 
 	auto operator+=(const ::color& other) -> ::color&;
+	auto operator+(const ::color& other) const -> ::color;
 	auto operator*(const ::color& other) const->::color;
 	auto operator*(const ::color&& other) const->::color;
 	auto operator*(double factor) const->color;
 
+	auto length2() const -> double;
+	auto length() const -> double;
+	auto scale(double factor) const -> color;
 	auto clamp() const->color;
 
 	auto rgb() const -> unsigned int;

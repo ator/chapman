@@ -14,15 +14,13 @@ public:
 	auto operator=(light&& other)->light& = delete;
 	virtual ~light() = default;
 
-	virtual auto contribution(
-		const scene& scene,
-		const vector3& hit_point,
-		const vector3& surface_normal,
-		const color& object_color,
-		double light_reflected)
-		->color = 0;
+	auto color() const -> ::color;
+
+	virtual auto direction_from(const vector3& hit_point)->vector3 = 0;
+	virtual auto intensity(const vector3& hit_point)->double = 0;
+	virtual auto distance(const vector3& hit_point)->double = 0;
 
 protected:
-	const color _color;
+	const ::color _color;
 	const double _intensity;
 };

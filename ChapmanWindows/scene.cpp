@@ -28,9 +28,9 @@ auto scene::add_directional_light(const vector3 direction, const color color, co
 	add_light(std::make_shared<directional_light>(direction.normalize(), color, intensity));
 }
 
-auto scene::add_point_light(const vector3 center, const double radius, const color color, const double intensity) -> void
+auto scene::add_point_light(const vector3 center, const color color, const double intensity) -> void
 {
-	add_light(std::make_shared<point_light>(center, radius, color, intensity));
+	add_light(std::make_shared<point_light>(center, color, intensity));
 }
 
 auto scene::render(image& image) const -> void
@@ -50,13 +50,26 @@ auto scene::render(image& image) const -> void
 
 				for (auto& light : _lights)
 				{
+					const auto direction_to_light = light->direction_from(hit_point);
+
+					const auto shadow_bias = 1E-6;
+					const ray shadow_ray{hit_point + surface_normal * shadow_bias, direction_to_light};
+
+					const auto shadow_intersection = trace(shadow_ray);
+					const auto in_light = !shadow_intersection || shadow_intersection->distance() > light->distance(hit_point);
+
+					const auto light_intensity = in_light ? light->intensity(hit_point) : 0.0;
+
+					auto const light_power = std::fmax(0.0, surface_normal * direction_to_light * light_intensity);
+					auto const light_reflected = intersection->object()->light_reflected();
+
+					const auto light_color = light->color() * light_power * light_reflected;
 					const auto object_color = intersection->object()->color();
-					const auto light_reflected = intersection->object()->light_reflected();
-					color += light->contribution(*this, hit_point, surface_normal, object_color, light_reflected);
+					color += object_color * light_color;
 				}
 			}
 
-			image.set_pixel(x, y, color.clamp());
+			image.set_pixel(x, y, color);
 		}
 	}
 }

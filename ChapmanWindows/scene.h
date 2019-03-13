@@ -16,7 +16,7 @@ public:
 	auto add_sphere(vector3 center, double radius, color color) -> void;
 	auto add_plane(vector3 center, vector3 normal, color color) -> void;
 	auto add_directional_light(vector3 direction, color color, double intensity) -> void;
-	auto add_point_light(vector3 center, double radius, color color, double intensity) -> void;
+	auto add_point_light(vector3 center, color color, double intensity) -> void;
 
 	auto render(image& image) const -> void;
 	auto trace(ray ray) const->boost::optional<intersection>;

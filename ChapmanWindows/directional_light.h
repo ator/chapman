@@ -5,19 +5,11 @@
 class directional_light final : public light
 {
 public:
-	directional_light(vector3 direction, color color, double intensity);
+	directional_light(vector3 direction, ::color color, double intensity);
 
-	auto direction() const->vector3;
-	auto color() const->color;
-	auto intensity() const -> double;
-
-	auto contribution(
-		const scene& scene,
-		const vector3& hit_point,
-		const vector3& surface_normal,
-		const ::color& object_color,
-		double light_reflected)
-		->::color override;
+	auto direction_from(const vector3& hit_point) -> vector3 override;
+	auto distance(const vector3& hit_point) -> double override;
+	auto intensity(const vector3& hit_point) -> double override;
 
 private:
 	vector3 _direction;
