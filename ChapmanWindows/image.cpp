@@ -1,21 +1,31 @@
 #include <cassert>
 #include <fstream>
-
-#include "image.h"
-#include <iostream>
 #include <iomanip>
 
-image::image(size_t width, size_t height) :
+#include "image.h"
+#include <mutex>
+#include <boost/thread/lock_algorithms.hpp>
+
+image::image(const size_t width, const size_t height) :
 	_width(width),
 	_height(height),
 	_aspect_ratio(static_cast<double>(width) / height),
 	_max_color(0)
 {
-	_pixels.resize(height);
-	for (auto& row : _pixels)
+	_pixels = new color*[height];
+	for (size_t y = 0; y < height; ++y)
 	{
-		row.resize(width);
+		_pixels[y] = new color[width];
 	}
+}
+
+image::~image()
+{
+	for (size_t y = 0; y < _height; ++y)
+	{
+		delete[] _pixels[y];
+	}
+	delete[] _pixels;
 }
 
 auto image::width() const -> size_t
@@ -41,20 +51,28 @@ auto image::set_pixel(const size_t x, const size_t y, const color color) -> void
 	_max_color = std::fmax(color.length2(), _max_color);
 }
 
+auto image::get_pixel(const size_t x, const size_t y) const -> color
+{
+	return _pixels[y][x];
+}
+
 auto image::write_to_disk(const std::string& filename, const bool normalize_colors) const -> void
 {
 	std::ofstream file(filename, std::ios::out | std::ios::binary);
 	if (file)
 	{
-		const auto max_color_value = 255;
 		const auto color_factor = std::sqrt(_max_color);
-		file << "P6\n " << _width << "\n " << _height << "\n " << max_color_value << "\n";
-		for (auto& row : _pixels)
+		file << "P6\n" << _width << "\n" << _height << "\n" << MAX_COLOR_VALUE << "\n";
+
+		for (size_t y = 0; y < _height; ++y)
 		{
-			for (auto& pixel : row)
+			for (size_t x = 0; x < _width; ++x)
 			{
-				auto rgb = normalize_colors ? pixel.scale(color_factor).rgb() : pixel.clamp().rgb();
-				file.write(reinterpret_cast<const char*>(&rgb), color::size());
+				auto pixel = _pixels[y][x];
+				auto color = normalize_colors ? pixel.scale(color_factor) : pixel.clamp();
+				write_color_component(file, color.red());
+				write_color_component(file, color.green());
+				write_color_component(file, color.blue());
 			}
 		}
 
@@ -62,14 +80,8 @@ auto image::write_to_disk(const std::string& filename, const bool normalize_colo
 	}
 }
 
-auto image::write_to_screen() const -> void
+auto image::write_color_component(std::ofstream& file, const double component) const -> void
 {
-	for (auto& row : _pixels)
-	{
-		for (auto& pixel : row)
-		{
-			std::cout << std::setw(6) << std::hex << pixel.rgb() << " ";
-		}
-		std::cout << std::endl;
-	}
+	const auto raw = static_cast<unsigned char>(component * MAX_COLOR_VALUE);
+	file.write(reinterpret_cast<const char*>(&raw), 1);
 }

@@ -3,8 +3,8 @@
 #include "sphere.h"
 #include "intersection.h"
 
-sphere::sphere(const vector3 center, const double radius, const ::color color, const double albedo) :
-	intersectable(color, albedo),
+sphere::sphere(const vector3 center, const double radius, std::shared_ptr<::material> material) :
+	intersectable(std::move(material)),
 	_center(center),
 	_radius(radius),
 	_radius_squared(radius * radius)

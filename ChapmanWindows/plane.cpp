@@ -1,8 +1,8 @@
 #include "plane.h"
 #include "intersection.h"
 
-plane::plane(const vector3 origin, const vector3 normal, const ::color color, const double albedo) :
-	intersectable(color, albedo),
+plane::plane(const vector3 origin, const vector3 normal, std::shared_ptr<::material> material) :
+	intersectable(std::move(material)),
 	_origin(origin),
 	_normal(normal)
 {}

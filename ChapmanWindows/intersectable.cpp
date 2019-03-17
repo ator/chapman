@@ -2,17 +2,11 @@
 
 #include "intersectable.h"
 
-intersectable::intersectable(const ::color color, const double albedo) :
-	_color(color),
-	_light_reflected(albedo / boost::math::constants::pi<double>())
+intersectable::intersectable(std::shared_ptr<::material> material) :
+	_material(std::move(material))
 {}
 
-auto intersectable::color() const -> ::color
+auto intersectable::material() const -> std::shared_ptr<::material>
 {
-	return _color;
-}
-
-auto intersectable::light_reflected() const -> double
-{
-	return _light_reflected;
+	return _material;
 }

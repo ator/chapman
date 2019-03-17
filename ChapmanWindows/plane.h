@@ -1,13 +1,12 @@
 #pragma once
 
 #include "vector3.h"
-#include "color.h"
 #include "intersectable.h"
 
 class plane : public intersectable
 {
 public:
-	plane(vector3 origin, vector3 normal, ::color color, double albedo = 1.0);
+	plane(vector3 origin, vector3 normal, std::shared_ptr<::material> material);
 
 	auto intersection_distance(const ray& ray) const -> boost::optional<double> override;
 	auto surface_normal(const vector3&) const -> vector3 override;

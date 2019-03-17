@@ -1,11 +1,10 @@
 #pragma once
-
-class point;
+#include <iostream>
 
 class vector3
 {
 public:
-	static vector3 zero;
+	static const vector3 ZERO;
 
 	vector3() = default;
 	vector3(double x, double y, double z);
@@ -22,8 +21,6 @@ public:
 	auto operator^(const vector3& v) const->vector3;
 	auto operator*(const vector3& v) const -> double;
 	
-	auto operator+(const point& p) const->vector3;
-
 	auto operator*(double factor) const->vector3;
 
 	auto operator-() const->vector3;
@@ -32,6 +29,8 @@ public:
 	auto length() const -> double;
 
 	auto normalize() const ->vector3;
+
+	friend std::ostream& operator<<(std::ostream& os, const vector3& v);
 
 private:
 	double _x{};

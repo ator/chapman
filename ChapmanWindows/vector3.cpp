@@ -1,8 +1,10 @@
 #include <cmath>
+#include <iostream>
 
 #include "vector3.h"
+#include <iomanip>
 
-vector3 vector3::zero(0, 0, 0);
+const vector3 vector3::ZERO(0, 0, 0);
 
 vector3::vector3(const double x, const double y, const double z) :
 	_x(x), _y(y), _z(z)
@@ -89,4 +91,10 @@ auto vector3::normalize() const -> vector3
 	const auto y = _y / len;
 	const auto z = _z / len;
 	return {x, y, z};
+}
+
+std::ostream& operator<<(std::ostream& os, const vector3& v)
+{
+	os << std::setprecision(2) << "(" << v.x() << ", " << v.y() << ", " << v.z() << ")";
+	return os;
 }

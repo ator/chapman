@@ -164,12 +164,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="directional_light.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="intersectable.h" />
     <ClInclude Include="intersection.h" />
     <ClInclude Include="light.h" />
+    <ClInclude Include="material.h" />
     <ClInclude Include="point_light.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="ray.h" />
@@ -178,12 +180,14 @@
     <ClInclude Include="vector3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="directional_light.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="intersectable.cpp" />
     <ClCompile Include="intersection.cpp" />
     <ClCompile Include="light.cpp" />
+    <ClCompile Include="material.cpp" />
     <ClCompile Include="point_light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plane.cpp" />

@@ -2,7 +2,8 @@
 
 ray::ray(const vector3 origin, const vector3 direction) :
 	_origin(origin),
-	_direction(direction)
+	_direction(direction),
+	_distance_traveled(0)
 {}
 
 ray::ray(const ray&& r) noexcept
@@ -26,4 +27,9 @@ auto ray::origin() const -> const vector3&
 auto ray::direction() const -> const vector3&
 {
 	return _direction;
+}
+
+auto ray::distance_traveled() -> double&
+{
+	return _distance_traveled;
 }

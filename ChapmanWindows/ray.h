@@ -15,8 +15,10 @@ public:
 
 	auto origin() const->const vector3&;
 	auto direction() const->const vector3&;
+	auto distance_traveled() -> double&;
 
 private:
 	vector3 _origin{};
 	vector3 _direction{};
+	double _distance_traveled;
 };
