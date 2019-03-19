@@ -9,7 +9,7 @@ class camera
 public:
 	camera(vector3 position, vector3 look_at, vector3 up, double field_of_view_degrees);
 
-	auto create_primary_ray(size_t x, size_t y, std::shared_ptr<image> image) const->ray;
+	auto create_primary_ray(double x, double y, std::shared_ptr<image> image) const->ray;
 
 private:
 	const vector3 _position;

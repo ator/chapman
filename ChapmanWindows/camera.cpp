@@ -15,10 +15,10 @@ camera::camera(vector3 position, vector3 look_at, vector3 up, double field_of_vi
 	//std::cout << "w: " << _w << std::endl;
 }
 
-auto camera::create_primary_ray(const size_t x, const size_t y, const std::shared_ptr<image> image) const -> ray
+auto camera::create_primary_ray(const double x, const double y, const std::shared_ptr<image> image) const -> ray
 {
-	const auto pixel_center_x = static_cast<double>(x) + 0.5;
-	const auto pixel_center_y = static_cast<double>(y) + 0.5;
+	const auto pixel_center_x = x + 0.5;
+	const auto pixel_center_y = y + 0.5;
 
 	const auto sensor_x = pixel_center_x / image->width() * 2.0 - 1.0;
 	const auto sensor_y = 1.0 - pixel_center_y / image->height() * 2.0;

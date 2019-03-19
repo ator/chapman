@@ -72,6 +72,14 @@ auto color::operator*(const double factor) const -> color
 	return { red, green, blue };
 }
 
+auto color::operator/(double factor) const -> color
+{
+	const auto red = _red / factor;
+	const auto green = _green / factor;
+	const auto blue = _blue / factor;
+	return { red, green, blue };
+}
+
 auto color::length2() const -> double
 {
 	return _red * _red + _green * _green + _blue * _blue;

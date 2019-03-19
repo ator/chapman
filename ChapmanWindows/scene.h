@@ -1,4 +1,6 @@
 #pragma once
+#include <random>
+
 #include "image.h"
 #include "intersectable.h"
 #include "light.h"
@@ -22,9 +24,12 @@ public:
 	auto add_directional_light(vector3 direction, color color, double intensity) -> void;
 	auto add_point_light(vector3 center, color color, double intensity) -> void;
 
-	auto render(const std::shared_ptr<camera>& camera, const std::shared_ptr<image>& image) const -> void;
+	auto render(const std::shared_ptr<camera>& camera, const std::shared_ptr<image>& image) -> void;
 
 private:
+	std::random_device _random_device;
+	std::mt19937 _mersenne_twister_engine;
+	std::uniform_real_distribution<double> _random_distribution;
 	const color _ambient_light_color;
 	const double _ambient_light_intensity;
 	const size_t _max_trace_depth;
@@ -32,8 +37,11 @@ private:
 	std::vector<std::shared_ptr<light>> _lights;
 	std::vector<std::shared_ptr<material>> _materials;
 
-	auto render(const std::shared_ptr<camera>& camera, const std::shared_ptr<image>& image, size_t start_x, size_t stop_x, size_t start_y, size_t stop_y) const -> void;
-	auto trace(ray ray, size_t depth) const->color;
+	auto render(const std::shared_ptr<camera>& camera,
+		const std::shared_ptr<image>& image,
+		size_t start_x, size_t stop_x,
+		size_t start_y, size_t stop_y) -> void;
+	auto trace(ray ray, size_t depth, double total_reflectivity) const->color;
 	auto add_object(std::shared_ptr<intersectable> object) -> void;
 	auto add_light(std::shared_ptr<light> light) -> void;
 	auto find_intersection(ray ray) const->boost::optional<intersection>;

@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+#include <queue>
 
 #include <boost/math/constants/constants.hpp>
 #include <boost/thread.hpp>
@@ -10,10 +12,10 @@
 #include "intersection.h"
 #include "directional_light.h"
 #include "point_light.h"
-#include <thread>
-#include <queue>
 
 scene::scene(const color ambient_light_color, const double ambient_light_intensity, const size_t max_trace_depth) :
+	_mersenne_twister_engine(_random_device()),
+	_random_distribution(-1.0, 1.0),
 	_ambient_light_color(ambient_light_color),
 	_ambient_light_intensity(ambient_light_intensity),
 	_max_trace_depth(max_trace_depth)
@@ -52,7 +54,7 @@ auto scene::add_point_light(const vector3 center, const color color, const doubl
 	add_light(std::make_shared<point_light>(center, color, intensity));
 }
 
-auto scene::render(const std::shared_ptr<camera>& camera, const std::shared_ptr<image>& image) const -> void
+auto scene::render(const std::shared_ptr<camera>& camera, const std::shared_ptr<image>& image) -> void
 {
 	auto number_of_threads = std::thread::hardware_concurrency();
 	if (number_of_threads == 0)
@@ -91,48 +93,62 @@ auto scene::render(const std::shared_ptr<camera>& camera, const std::shared_ptr<
 	render_threads.join_all();
 }
 
-void scene::render(const std::shared_ptr<camera>& camera, const std::shared_ptr<image>& image, const size_t start_x, const size_t stop_x, const size_t start_y, const size_t stop_y) const
+void scene::render(const std::shared_ptr<camera>& camera,
+	const std::shared_ptr<image>& image,
+	const size_t start_x, const size_t stop_x, 
+	const size_t start_y, const size_t stop_y) 
 {
 	for (auto y = start_y; y < stop_y; ++y)
 	{
 		for (auto x = start_x; x < stop_x; ++x)
 		{
-			const auto primary_ray = camera->create_primary_ray(x, y, image);
+			auto color = color::BLACK;
 
-			const auto color = trace(primary_ray, 1);
+			for (auto sub_pixel = 0; sub_pixel < 4; ++sub_pixel)
+			{
+				const auto x_offset = _random_distribution(_mersenne_twister_engine);
+				const auto y_offset = _random_distribution(_mersenne_twister_engine);
 
-			image->set_pixel(x, y, color);
+				const auto primary_ray = camera->create_primary_ray(x + x_offset, y + y_offset, image);
+				
+				color += trace(primary_ray, 1, 1);
+			}
+
+			image->set_pixel(x, y, color / 4);
 		}
 	}
 }
 
-auto scene::trace(ray ray, const size_t depth) const -> color
+auto scene::trace(ray ray, const size_t depth, const double total_reflectivity) const -> color
 {
-	if (depth > _max_trace_depth) return color::BLACK;
+	const auto minimum_reflectivity = 0.01;
+	if (total_reflectivity < minimum_reflectivity || depth > _max_trace_depth) return color::BLACK;
 
 	auto intersection = find_intersection(ray);
 	if (intersection)
 	{
+		const auto shadow_bias = 1E-6;
+
 		const auto hit_point = ray.origin() + ray.direction() * intersection->distance();
 		const auto surface_normal = intersection->object()->surface_normal(hit_point);
 
 		const auto material = intersection->object()->material();
 		const auto object_color = material->color();
-		const auto light_reflected = material->light_reflected();
+		//const auto light_reflected = material->light_reflected();
 
 		const auto direction_to_ambient_light = ray.origin() - hit_point;
 		const auto distance_to_hit_point = direction_to_ambient_light.length();
 		ray.distance_traveled() += distance_to_hit_point;
 
 		auto const ambient_light_power = std::fmax(0.0, surface_normal * direction_to_ambient_light * _ambient_light_intensity);
-		auto const ambient_light_magnitude = ambient_light_power * light_reflected / distance_to_hit_point;
+		const auto distance_squared = distance_to_hit_point * distance_to_hit_point;
+		auto const ambient_light_magnitude = ambient_light_power / fmax(1, distance_squared);
 		auto color = object_color * _ambient_light_color * ambient_light_magnitude;
 
 		for (auto& light : _lights)
 		{
 			const auto direction_to_light = light->direction_from(hit_point);
 
-			const auto shadow_bias = 1E-6;
 			const ::ray shadow_ray{ hit_point + surface_normal * shadow_bias, direction_to_light };
 
 			const auto shadow_intersection = find_intersection(shadow_ray);
@@ -144,12 +160,12 @@ auto scene::trace(ray ray, const size_t depth) const -> color
 				const auto light_color = light->color();
 
 				const auto diffuse_light = diffuse_light_contribution(direction_to_light, surface_normal);
-				const auto diffuse_reflection = light_reflected * material->diffuse_reflection();
+				const auto diffuse_reflection = material->diffuse_reflection();
 				const auto diffuse_light_magnitude = diffuse_light * light_intensity * diffuse_reflection;
 
 				const auto specular_light = specular_light_contribution(direction_to_light, surface_normal);
 				const auto specular_reflection = material->specular_reflection();
-				const auto specular_light_magnitude = specular_light * light_reflected * light_intensity * specular_reflection;
+				const auto specular_light_magnitude = specular_light * light_intensity * specular_reflection;
 
 				const auto surface_color = object_color * light_color;
 
@@ -158,15 +174,17 @@ auto scene::trace(ray ray, const size_t depth) const -> color
 			}
 		}
 
-		const auto object_reflectivity = light_reflected * intersection->object()->material()->reflectivity();
+		const auto object_reflectivity = intersection->object()->material()->reflectivity();
 		if (object_reflectivity > 0)
 		{
 			const auto reflection_direction = ray.direction() - surface_normal * 2 * (ray.direction() * surface_normal);
-			::ray reflection_ray(hit_point, reflection_direction);
+			::ray reflection_ray(hit_point + surface_normal * shadow_bias, reflection_direction);
 
-			auto reflection_color = trace(reflection_ray, depth + 1);
+			const auto reflection_distance_squared = reflection_ray.distance_traveled() * reflection_ray.distance_traveled();
+			const auto reflection_magnitude = object_reflectivity / std::fmax(1, reflection_distance_squared);
 
-			auto reflection_magnitude = object_reflectivity / std::fmax(1, reflection_ray.distance_traveled());
+			const auto reflection_color = trace(reflection_ray, depth + 1, total_reflectivity * reflection_magnitude);
+
 			color += reflection_color * reflection_magnitude;
 		}
 

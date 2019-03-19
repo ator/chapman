@@ -24,6 +24,7 @@ public:
 	auto operator*(const color& other) const->::color;
 	auto operator*(const color&& other) const->::color;
 	auto operator*(double factor) const->color;
+	auto operator/(double factor) const->color;
 
 	auto length2() const -> double;
 	auto length() const -> double;
