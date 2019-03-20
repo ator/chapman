@@ -1,3 +1,6 @@
+#include <memory>
+#include <cmath>
+
 #include "plane.h"
 #include "intersection.h"
 

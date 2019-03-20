@@ -34,6 +34,39 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\ChapmanWindows\camera.cpp" />
+    <ClCompile Include="..\ChapmanWindows\color.cpp" />
+    <ClCompile Include="..\ChapmanWindows\directional_light.cpp" />
+    <ClCompile Include="..\ChapmanWindows\image.cpp" />
+    <ClCompile Include="..\ChapmanWindows\intersectable.cpp" />
+    <ClCompile Include="..\ChapmanWindows\intersection.cpp" />
+    <ClCompile Include="..\ChapmanWindows\light.cpp" />
+    <ClCompile Include="..\ChapmanWindows\main.cpp" />
+    <ClCompile Include="..\ChapmanWindows\material.cpp" />
+    <ClCompile Include="..\ChapmanWindows\plane.cpp" />
+    <ClCompile Include="..\ChapmanWindows\point_light.cpp" />
+    <ClCompile Include="..\ChapmanWindows\ray.cpp" />
+    <ClCompile Include="..\ChapmanWindows\scene.cpp" />
+    <ClCompile Include="..\ChapmanWindows\sphere.cpp" />
+    <ClCompile Include="..\ChapmanWindows\vector3.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\ChapmanWindows\camera.h" />
+    <ClInclude Include="..\ChapmanWindows\color.h" />
+    <ClInclude Include="..\ChapmanWindows\directional_light.h" />
+    <ClInclude Include="..\ChapmanWindows\image.h" />
+    <ClInclude Include="..\ChapmanWindows\intersectable.h" />
+    <ClInclude Include="..\ChapmanWindows\intersection.h" />
+    <ClInclude Include="..\ChapmanWindows\light.h" />
+    <ClInclude Include="..\ChapmanWindows\material.h" />
+    <ClInclude Include="..\ChapmanWindows\plane.h" />
+    <ClInclude Include="..\ChapmanWindows\point_light.h" />
+    <ClInclude Include="..\ChapmanWindows\ray.h" />
+    <ClInclude Include="..\ChapmanWindows\scene.h" />
+    <ClInclude Include="..\ChapmanWindows\sphere.h" />
+    <ClInclude Include="..\ChapmanWindows\vector3.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3ae88af2-683f-4983-9ffd-a7200b9e3cf1}</ProjectGuid>
     <Keyword>Linux</Keyword>
@@ -82,9 +115,6 @@
     <TargetName>chapman</TargetName>
     <TargetExt />
   </PropertyGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -99,12 +129,20 @@
     <ClCompile>
       <LinkTimeOptimization>true</LinkTimeOptimization>
       <CppLanguageStandard>c++17</CppLanguageStandard>
+      <AdditionalIncludeDirectories>/usr/include/;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>/lib64/libboost_thread.so;/lib64/libboost_filesystem.so;/lib64/libboost_program_options.so;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <CppLanguageStandard>c++17</CppLanguageStandard>
+      <AdditionalIncludeDirectories>/usr/include/;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>/lib64/libboost_thread.so;/lib64/libboost_filesystem.so;/lib64/libboost_program_options.so;$(StlAdditionalDependencies);%(Link.AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

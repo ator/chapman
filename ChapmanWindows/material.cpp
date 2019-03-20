@@ -9,7 +9,7 @@ material::material(const ::color color, const double diffuse_reflection, const d
 	_reflectivity(reflectivity)
 {}
 
-auto material::color() const -> ::color
+auto material::surface_color() const -> ::color
 {
 	return _color;
 }

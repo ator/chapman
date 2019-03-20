@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 #include <boost/program_options.hpp>
 #include <boost/math/constants/constants.hpp>

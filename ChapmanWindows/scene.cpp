@@ -132,8 +132,8 @@ auto scene::trace(ray ray, const size_t depth, const double total_reflectivity) 
 		const auto hit_point = ray.origin() + ray.direction() * intersection->distance();
 		const auto surface_normal = intersection->object()->surface_normal(hit_point);
 
-		const auto material = intersection->object()->material();
-		const auto object_color = material->color();
+		const auto material = intersection->object()->get_material();
+		const auto object_color = material->surface_color();
 		//const auto light_reflected = material->light_reflected();
 
 		const auto direction_to_ambient_light = ray.origin() - hit_point;
@@ -157,7 +157,7 @@ auto scene::trace(ray ray, const size_t depth, const double total_reflectivity) 
 			if (in_light)
 			{
 				const auto light_intensity = light->intensity(hit_point);
-				const auto light_color = light->color();
+				const auto light_color = light->get_color();
 
 				const auto diffuse_light = diffuse_light_contribution(direction_to_light, surface_normal);
 				const auto diffuse_reflection = material->diffuse_reflection();
@@ -174,7 +174,7 @@ auto scene::trace(ray ray, const size_t depth, const double total_reflectivity) 
 			}
 		}
 
-		const auto object_reflectivity = intersection->object()->material()->reflectivity();
+		const auto object_reflectivity = intersection->object()->get_material()->reflectivity();
 		if (object_reflectivity > 0)
 		{
 			const auto reflection_direction = ray.direction() - surface_normal * 2 * (ray.direction() * surface_normal);

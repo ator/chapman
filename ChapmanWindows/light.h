@@ -14,7 +14,7 @@ public:
 	auto operator=(light&& other)->light& = delete;
 	virtual ~light() = default;
 
-	auto color() const -> ::color;
+	auto get_color() const -> ::color;
 
 	virtual auto direction_from(const vector3& hit_point)->vector3 = 0;
 	virtual auto intensity(const vector3& hit_point)->double = 0;

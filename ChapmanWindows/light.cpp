@@ -5,7 +5,7 @@ light::light(const ::color color, const double intensity) :
 	_intensity(intensity)
 {}
 
-auto light::color() const -> ::color
+auto light::get_color() const -> ::color
 {
 	return _color;
 }

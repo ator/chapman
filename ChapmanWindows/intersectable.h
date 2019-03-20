@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 #include <boost/optional.hpp>
 
@@ -17,7 +18,7 @@ public:
 	auto operator=(intersectable&& other)->intersectable& = delete;
 	virtual ~intersectable() = default;
 
-	auto material() const -> std::shared_ptr<material>;
+	auto get_material() const -> std::shared_ptr<material>;
 
 	virtual auto intersection_distance(const ray& ray) const -> boost::optional<double> = 0;
 	virtual auto surface_normal(const vector3& hit_point) const->vector3 = 0;
