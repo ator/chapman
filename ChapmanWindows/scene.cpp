@@ -25,11 +25,11 @@ auto scene::add_material(
 	const color color,
 	const double diffuse_reflection,
 	const double specular_reflection,
-	const double albedo,
-	const double reflectivity)
+	const double reflectivity,
+	const double albedo)
 	-> std::shared_ptr<material>
 {
-	auto material = std::make_shared<::material>(color, diffuse_reflection, specular_reflection, albedo, reflectivity);
+	auto material = std::make_shared<::material>(color, diffuse_reflection, specular_reflection, reflectivity, albedo);
 	_materials.emplace_back(material);
 	return material;
 }
@@ -121,13 +121,14 @@ void scene::render(const std::shared_ptr<camera>& camera,
 
 auto scene::trace(ray ray, const size_t depth, const double total_reflectivity) const -> color
 {
-	const auto minimum_reflectivity = 0.01;
+	const auto minimum_reflectivity = 0.001;
 	if (total_reflectivity < minimum_reflectivity || depth > _max_trace_depth) return color::BLACK;
 
 	auto intersection = find_intersection(ray);
 	if (intersection)
 	{
 		const auto shadow_bias = 1E-6;
+		const auto four_pi = 4 * boost::math::constants::pi<double>();
 
 		const auto hit_point = ray.origin() + ray.direction() * intersection->distance();
 		const auto surface_normal = intersection->object()->surface_normal(hit_point);
@@ -140,9 +141,10 @@ auto scene::trace(ray ray, const size_t depth, const double total_reflectivity) 
 		const auto distance_to_hit_point = direction_to_ambient_light.length();
 		ray.distance_traveled() += distance_to_hit_point;
 
-		auto const ambient_light_power = std::fmax(0.0, surface_normal * direction_to_ambient_light * _ambient_light_intensity);
-		const auto distance_squared = distance_to_hit_point * distance_to_hit_point;
-		auto const ambient_light_magnitude = ambient_light_power / fmax(1, distance_squared);
+		const auto ambient_light_power = std::fmax(0.0, surface_normal * direction_to_ambient_light) * _ambient_light_intensity;
+		const auto object_distance_squared = distance_to_hit_point * distance_to_hit_point;
+		const auto object_distance_factor = fmax(1, four_pi * object_distance_squared);
+		auto const ambient_light_magnitude = ambient_light_power / object_distance_factor;
 		auto color = object_color * _ambient_light_color * ambient_light_magnitude;
 
 		for (auto& light : _lights)
@@ -152,20 +154,23 @@ auto scene::trace(ray ray, const size_t depth, const double total_reflectivity) 
 			const ::ray shadow_ray{ hit_point + surface_normal * shadow_bias, direction_to_light };
 
 			const auto shadow_intersection = find_intersection(shadow_ray);
-			const auto in_light = !shadow_intersection || shadow_intersection->distance() > light->distance(hit_point);
+			const auto distance_to_light = light->distance(hit_point);
+			const auto in_light = !shadow_intersection || shadow_intersection->distance() > distance_to_light;
 
 			if (in_light)
 			{
+				const auto distance_to_light_squared = distance_to_light * distance_to_light;
+				const auto light_distance_factor = std::fmax(1, four_pi * distance_to_light_squared);
 				const auto light_intensity = light->intensity(hit_point);
 				const auto light_color = light->get_color();
 
 				const auto diffuse_light = diffuse_light_contribution(direction_to_light, surface_normal);
 				const auto diffuse_reflection = material->diffuse_reflection();
-				const auto diffuse_light_magnitude = diffuse_light * light_intensity * diffuse_reflection;
+				const auto diffuse_light_magnitude = diffuse_light * light_intensity * diffuse_reflection / light_distance_factor;
 
 				const auto specular_light = specular_light_contribution(direction_to_light, surface_normal);
 				const auto specular_reflection = material->specular_reflection();
-				const auto specular_light_magnitude = specular_light * light_intensity * specular_reflection;
+				const auto specular_light_magnitude = specular_light * light_intensity * specular_reflection / light_distance_factor;
 
 				const auto surface_color = object_color * light_color;
 
@@ -181,7 +186,8 @@ auto scene::trace(ray ray, const size_t depth, const double total_reflectivity) 
 			::ray reflection_ray(hit_point + surface_normal * shadow_bias, reflection_direction);
 
 			const auto reflection_distance_squared = reflection_ray.distance_traveled() * reflection_ray.distance_traveled();
-			const auto reflection_magnitude = object_reflectivity / std::fmax(1, reflection_distance_squared);
+			const auto reflection_distance_factor = std::fmax(1, four_pi * reflection_distance_squared);
+			const auto reflection_magnitude = object_reflectivity / reflection_distance_factor;
 
 			const auto reflection_color = trace(reflection_ray, depth + 1, total_reflectivity * reflection_magnitude);
 
@@ -226,14 +232,12 @@ auto scene::find_intersection(const ray ray) const -> boost::optional<intersecti
 auto scene::diffuse_light_contribution(const vector3 direction_to_light, const vector3 surface_normal) const -> double
 {
 	auto const light_power = std::fmax(0.0, surface_normal * direction_to_light);
-
 	return light_power;
 }
 
 auto scene::specular_light_contribution(const vector3 direction_to_light, const vector3 surface_normal) const -> double
 {
-	const auto specular_angle = std::fmax(direction_to_light * surface_normal, 0);
-	const auto specular_power = pow(specular_angle, 15);
-
+	const auto specular_angle = std::fmax(0.0, surface_normal * direction_to_light);
+	const auto specular_power = pow(specular_angle, 6);
 	return specular_power;
 }

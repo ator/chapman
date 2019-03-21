@@ -17,7 +17,7 @@ public:
 	auto operator=(scene&& s)->scene& = delete;
 	~scene() = default;
 
-	auto add_material(color color, double diffuse_reflection, double specular_reflection, double albedo, double reflectivity)
+	auto add_material(color color, double diffuse_reflection, double specular_reflection, double reflectivity, double albedo = 0.18)
 		->std::shared_ptr<material>;
 	auto add_sphere(vector3 center, double radius, std::shared_ptr<material> material) -> void;
 	auto add_plane(vector3 center, vector3 normal, std::shared_ptr<material> material) -> void;
